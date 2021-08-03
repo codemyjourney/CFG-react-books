@@ -2,7 +2,7 @@ import graphene
 import users.schema
 import books.schema
 
-class Query(books.schema.Query, graphene.ObjectType):
+class Query(users.schema.Query,books.schema.Query, graphene.ObjectType):
     pass
 
 class Mutation(users.schema.Mutation, books.schema.Mutation, graphene.ObjectType):
