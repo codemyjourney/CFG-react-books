@@ -1,6 +1,7 @@
 import graphene 
 from graphene_django import DjangoObjectType
-from .models import Book
+from .models import Book, Like
+from users.schema import UserType
 
 
 class BookType(DjangoObjectType):
@@ -76,7 +77,32 @@ class DeleteBook(graphene.Mutation):
 
         return DeleteBook(book_id=book_id)
 
+class CreateLike(graphene.Mutation):
+    user = graphene.Field(UserType)
+    book = graphene.Field(BookType)
+
+    class Arguments:
+        book_id = graphene.Int(required=True)
+
+    def mutate(self, info, book_id):
+        user = info.context.user
+
+        if user.is_anonymous:
+            raise Exception("Login first")
+
+        book = Book.objects.get(id=book_id)
+        if not book:
+            raise Exception('Cannot find a book with id {}'.format(book_id))
+
+        Like.objects.create(
+            user=user,
+            book=book
+        )
+
+        return CreateLike(user=user, book=book)
+
 class Mutation(graphene.ObjectType):
     create_book = CreateBook.Field()
     update_book = UpdateBook.Field()
     delete_book = DeleteBook.Field()
+    create_like = CreateLike.Field()
