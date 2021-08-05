@@ -1,5 +1,7 @@
 import graphene 
 from graphene_django import DjangoObjectType
+from graphql import GraphQLError
+from django.db.models import Q
 from .models import Book, Like
 from users.schema import UserType
 
@@ -14,10 +16,19 @@ class LikeType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
-    books = graphene.List(BookType)
+    books = graphene.List(BookType, search=graphene.String())
     likes = graphene.List(LikeType)
 
-    def resolve_books(self, info):
+    def resolve_books(self, info, search=None):
+        if search: 
+            filter = (
+                Q(title__icontains=search) |
+                Q(description__icontains=search) |
+                Q(url__icontains=search) |
+                Q(posted_by__username__icontains=search)
+            )
+            return Book.objects.filter(filter)
+
         return Book.objects.all()
     def resolve_likes(self, info):
         return Like.objects.all()
@@ -36,7 +47,7 @@ class CreateBook(graphene.Mutation):
         user = info.context.user 
 
         if user.is_anonymous:
-            raise Exception("Login to add a book")
+            raise GraphQLError("Login to add a book")
 
         book = Book(title=title, author=author, description=description, url=url, posted_by=user)
         book.save()
@@ -58,7 +69,7 @@ class UpdateBook(graphene.Mutation):
         book = Book.objects.get(id=book_id)
         
         if book.posted_by != user:
-            raise Exception("Not permited to update")
+            raise GraphQLError("Not permited to update")
 
         book.title = title
         book.description = description
@@ -81,7 +92,7 @@ class DeleteBook(graphene.Mutation):
         book = Book.objects.get(id=book_id)
 
         if book.posted_by != user:
-            raise Exception("Not permited to delete this book")
+            raise GraphQLError("Not permited to delete this book")
 
         book.delete()
 
@@ -99,11 +110,11 @@ class CreateLike(graphene.Mutation):
         user = info.context.user
 
         if user.is_anonymous:
-            raise Exception("Login first")
+            raise GraphQLError("Login first")
 
         book = Book.objects.get(id=book_id)
         if not book:
-            raise Exception('Cannot find a book with id {}'.format(book_id))
+            raise GraphQLError('Cannot find a book with id {}'.format(book_id))
 
         Like.objects.create(
             user=user,
