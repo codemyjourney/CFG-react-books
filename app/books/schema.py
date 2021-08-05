@@ -8,12 +8,19 @@ class BookType(DjangoObjectType):
     class Meta:
         model = Book
 
+class LikeType(DjangoObjectType):
+    class Meta:
+        model = Like
+
 
 class Query(graphene.ObjectType):
     books = graphene.List(BookType)
+    likes = graphene.List(LikeType)
 
     def resolve_books(self, info):
         return Book.objects.all()
+    def resolve_likes(self, info):
+        return Like.objects.all()
 
 
 class CreateBook(graphene.Mutation):
@@ -41,10 +48,10 @@ class UpdateBook(graphene.Mutation):
 
     class Arguments:
         book_id = graphene.Int(required=True)
-        title = graphene.String(required=False)
-        author = graphene.String(required=False)
-        description = graphene.String(required=False)
-        url = graphene.String(required=False)
+        title = graphene.String()
+        author = graphene.String()
+        description = graphene.String()
+        url = graphene.String()
 
     def mutate(self, info, book_id, title, author, description, url):
         user = info.context.user
