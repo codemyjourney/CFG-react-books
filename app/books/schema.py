@@ -37,10 +37,10 @@ class UpdateBook(graphene.Mutation):
 
     class Arguments:
         book_id = graphene.Int(required=True)
-        title = graphene.String()
-        author = graphene.String()
-        description = graphene.String()
-        url = graphene.String()
+        title = graphene.String(required=False)
+        author = graphene.String(required=False)
+        description = graphene.String(required=False)
+        url = graphene.String(required=False)
 
     def mutate(self, info, book_id, title, author, description, url):
         user = info.context.user
@@ -58,6 +58,25 @@ class UpdateBook(graphene.Mutation):
 
         return UpdateBook(book=book)
 
+
+class DeleteBook(graphene.Mutation):
+    book_id = graphene.Int()
+
+    class Arguments:
+        book_id = graphene.Int(required=True)
+
+    def mutate(self, info, book_id):
+        user = info.context.user
+        book = Book.objects.get(id=book_id)
+
+        if book.posted_by != user:
+            raise Exception("Not permited to delete this book")
+
+        book.delete()
+
+        return DeleteBook(book_id=book_id)
+
 class Mutation(graphene.ObjectType):
     create_book = CreateBook.Field()
     update_book = UpdateBook.Field()
+    delete_book = DeleteBook.Field()
