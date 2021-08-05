@@ -8,11 +8,13 @@ class BookType(DjangoObjectType):
     class Meta:
         model = Book
 
+
 class Query(graphene.ObjectType):
     books = graphene.List(BookType)
 
     def resolve_books(self, info):
         return Book.objects.all()
+
 
 class CreateBook(graphene.Mutation):
     book = graphene.Field(BookType)
@@ -32,6 +34,7 @@ class CreateBook(graphene.Mutation):
         book = Book(title=title, author=author, description=description, url=url, posted_by=user)
         book.save()
         return CreateBook(book=book)
+
 
 class UpdateBook(graphene.Mutation):
     book = graphene.Field(BookType)
@@ -76,6 +79,7 @@ class DeleteBook(graphene.Mutation):
         book.delete()
 
         return DeleteBook(book_id=book_id)
+
 
 class CreateLike(graphene.Mutation):
     user = graphene.Field(UserType)
