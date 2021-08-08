@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 
 import withRoot from "../../withRoot";
+import Login from "./Login"
+import Regiter from "./Register"
 
 export default withRoot(() => {
-  return <div>Auth</div>;
+  const [newUser, setNewUser] = useState(true)
+  return newUser ? (<Regiter setNewUser={setNewUser}/>) : (<Login/>);
 });
