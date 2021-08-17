@@ -20,6 +20,7 @@ python manage.py runserver
 2. explore the "Docs" on the right (Queries, Mutations)
 3. Write your first query:
 
+---
 
 ### QUERIS 
 #### -> GET BOOKS
@@ -53,7 +54,7 @@ example -> createUser(email: "test@gmail.com", password: "1234567890", username:
 
 After creating a user profile, you can login
 
-1. GET THE AUTH TOKEN
+**1. GET THE AUTH TOKEN**
 
 
 Enter your username and password you've just provided. After executing the query copy the auth token
@@ -66,19 +67,20 @@ mutation {
 }
 ```
 
----- IMAGE ---
 
-2. LOG IN
+**2. LOG IN**
 
 
 Enter your Auth Token in REQUEST HEADERS TAB
+<img src="https://user-images.githubusercontent.com/62475313/129799508-68c7109e-6ca7-4e9b-a493-a4957f824498.png" alt="app-preview"></img>
+
 ```
 {
 "Authentication": "JWT {YOUR TOKEN}"
 }
 ```
 
-GET INFO ABOUT THE USER YOU HAVE CREATED:
+**3. GET INFO ABOUT THE USER YOU HAVE CREATED:**
 ```
 {
   me {
@@ -89,6 +91,8 @@ GET INFO ABOUT THE USER YOU HAVE CREATED:
 }
 
 ```
+
+---
 
 ### BOOKS QUERIES AND MUTATIONS 
 
