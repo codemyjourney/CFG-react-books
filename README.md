@@ -1,4 +1,4 @@
-### Backend
+### Run Backend
 
 ```
 pipenv shell
@@ -12,56 +12,111 @@ cd app
 ```
 python manage.py runserver
 ```
-### create data
+
+
+### Execute Queries and Mutations:
+
+1. go to http://localhost:8000/graphql/
+2. explore the "Docs" on the right (Queries, Mutations)
+3. Write your first query:
+
+
+### QUERIS 
+#### -> GET BOOKS
+
+GET BOOKS:
 ```
-cd app
-python manage.py shell
-
-from books.models import Book
-Book.objects.create(title="Track 2", description="Description 2", author="Author 2", url="https://google.com")
+query getBooks {
+  books {
+    id
+    author
+    description
+    url
+ }
+}
 ```
 
+#### -> CREATE A USER & LOG IN
+CREATE A NEW USER:
+```
+mutation {
+  createUser(email: "VALID_EMAIL", password: "VALID_PASSWORD", username: "USERNAME"){
+    user {
+      id
+      email
+      username
+    }
+  }
+}
+```
+example -> createUser(email: "test@gmail.com", password: "1234567890", username: "test_123")
 
-### Query And Mutation examples
+After creating a user profile, you can login
+
+1. GET THE AUTH TOKEN
+
+
+Enter your username and password you've just provided. After executing the query copy the auth token
 
 ```
-# query getBooks {
-#   books {
-#     id
-#     author
-#   }
-# }
-
-# 
-
-# mutation {
-#   createBook(author:"cool author", description: "some desct", url: "9599", title: "titlre"){
-#     book {
-#       id
-#       title
-#       description
-#       author
-#       url
-#       createdAt
-#     }
-#   }
-# }
-
-# query {
-#   user (id: 2) {
-#     id
-#     username
-#     email
-#   }
-# }
-
-# mutation {
-#   createUser(email: "s.karlinska@gmail.com", password: "45634343", username: "s.kutyepov"){
-#     user {
-#       id
-#       email
-#       username
-#     }
-#   }
-# }
+mutation {
+  tokenAuth(username:"USERNAME", password: "VALID_PASSWORD") {
+    token
+  }
+}
 ```
+
+---- IMAGE ---
+
+2. LOG IN
+
+
+Enter your Auth Token in REQUEST HEADERS TAB
+```
+{
+"Authentication": "JWT {YOUR TOKEN}"
+}
+```
+
+GET INFO ABOUT THE USER YOU HAVE CREATED:
+```
+{
+  me {
+    id
+    username
+    email
+  }
+}
+
+```
+
+### BOOKS QUERIES AND MUTATIONS 
+
+#### CREATE A BOOK
+
+```
+mutation {
+  createBook(author:"cool author", description: "some desct", url: "9599", title: "titlre"){
+    book {
+      id
+      title
+      description
+      author
+      url
+      createdAt
+    }
+  }
+}
+```
+
+#### UPDATE A BOOK
+TODO
+
+#### DELETE A BOOK
+TODO
+#### LIKE A BOOK
+TODO
+#### CHECK HOW MANY LIKES ARE ON BOOKS
+TODO
+#### SEARCH A BOOK
+TODO
