@@ -76,7 +76,7 @@ Enter your Auth Token in REQUEST HEADERS TAB
 
 ```
 {
-"Authentication": "JWT {YOUR TOKEN}"
+"Authorization": "JWT {YOUR TOKEN}"
 }
 ```
 
