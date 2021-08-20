@@ -114,13 +114,65 @@ mutation {
 ```
 
 #### UPDATE A BOOK
-TODO
+```
+mutation {
+  updateBook(bookId: 8, author:"Unknown Author"){
+    book{
+      id
+      author
+      description
+    }
+  }
+}
+```
 
 #### DELETE A BOOK
-TODO
+```
+mutation {
+  deleteBook(bookId: 8){
+    bookId
+  }
+}
+```
+
 #### LIKE A BOOK
-TODO
+```
+mutation {
+  createLike(bookId: 8) {
+   user {
+    id
+    username
+  }
+  }
+}
+```
+
 #### CHECK HOW MANY LIKES ARE ON BOOKS
-TODO
+```
+query {
+  books {
+    id
+    title
+    description
+    likes {
+      id
+      user {
+        id
+        username
+      }
+    }
+  }
+}
+```
+
 #### SEARCH A BOOK
-TODO
+```
+query{
+  books(search: "python") {
+    id
+    title
+    author
+    description
+  }
+}
+```
